@@ -1,0 +1,142 @@
+%%
+headers
+#include <Python.h>
+#include "pygobject.h"
+#include "pycairo.h"
+extern Pycairo_CAPI_t *Pycairo_CAPI;
+extern PyTypeObject PyGdkCairoContext_Type;\
+//extern PyTypeObject PyGObject_Type;
+#include <lasem/lsmattributes.h>
+#include <lasem/lsmdebug.h>
+#include <lasem/lsmdomnode.h>
+#include <lasem/lsmdomnodelist.h>
+#include <lasem/lsmdomattributes.h>
+#include <lasem/lsmdomcharacterdata.h>
+#include <lasem/lsmdomdocument.h>
+#include <lasem/lsmdomelement.h>
+#include <lasem/lsmdom.h>
+#include <lasem/lsmdomimplementation.h>
+
+
+#include <lasem/lsmdomparser.h>
+#include <lasem/lsmdomtext.h>
+#include <lasem/lsmdomview.h>
+#include <lasem/lsm.h>
+#include <lasem/lsmmathmlactionelement.h>
+#include <lasem/lsmmathmlaligngroupelement.h>
+#include <lasem/lsmmathmlalignmarkelement.h>
+#include <lasem/lsmmathmlattributes.h>
+#include <lasem/lsmmathmldocument.h>
+#include <lasem/lsmmathmlelement.h>
+#include <lasem/lsmmathmlentitydictionary.h>
+#include <lasem/lsmmathmlenums.h>
+#include <lasem/lsmmathmlerrorelement.h>
+#include <lasem/lsmmathmlfencedelement.h>
+#include <lasem/lsmmathmlfractionelement.h>
+#include <lasem/lsmmathmlglyphtableams.h>
+#include <lasem/lsmmathml.h>
+#include <lasem/lsmmathmllayoututils.h>
+#include <lasem/lsmmathmlmathelement.h>
+#include <lasem/lsmmathmloperatordictionary.h>
+#include <lasem/lsmmathmloperatorelement.h>
+#include <lasem/lsmmathmlpaddedelement.h>
+#include <lasem/lsmmathmlphantomelement.h>
+#include <lasem/lsmmathmlpresentationcontainer.h>
+#include <lasem/lsmmathmlpresentationtoken.h>
+#include <lasem/lsmmathmlradicalelement.h>
+#include <lasem/lsmmathmlrowelement.h>
+#include <lasem/lsmmathmlscriptelement.h>
+#include <lasem/lsmmathmlspaceelement.h>
+#include <lasem/lsmmathmlstringelement.h>
+#include <lasem/lsmmathmlstyleelement.h>
+#include <lasem/lsmmathmlstyle.h>
+#include <lasem/lsmmathmltablecellelement.h>
+#include <lasem/lsmmathmltableelement.h>
+#include <lasem/lsmmathmltablerowelement.h>
+#include <lasem/lsmmathmlunderoverelement.h>
+#include <lasem/lsmmathmlutils.h>
+#include <lasem/lsmmathmlview.h>
+#include <lasem/lsmproperties.h>
+#include <lasem/lsmstr.h>
+#include <lasem/lsmsvgattributes.h>
+#include <lasem/lsmsvgcircleelement.h>
+#include <lasem/lsmsvgclippathelement.h>
+#include <lasem/lsmsvgcolors.h>
+#include <lasem/lsmsvgdefselement.h>
+#include <lasem/lsmsvgdocument.h>
+#include <lasem/lsmsvgelement.h>
+#include <lasem/lsmsvgellipseelement.h>
+#include <lasem/lsmsvgenums.h>
+#include <lasem/lsmsvggelement.h>
+#include <lasem/lsmsvggradientelement.h>
+#include <lasem/lsmsvg.h>
+#include <lasem/lsmsvgimageelement.h>
+#include <lasem/lsmsvglength.h>
+#include <lasem/lsmsvglineargradientelement.h>
+#include <lasem/lsmsvglineelement.h>
+#include <lasem/lsmsvgmarkerelement.h>
+#include <lasem/lsmsvgmaskelement.h>
+#include <lasem/lsmsvgmatrix.h>
+#include <lasem/lsmsvgpathelement.h>
+#include <lasem/lsmsvgpatternelement.h>
+#include <lasem/lsmsvgpolygonelement.h>
+#include <lasem/lsmsvgpolylineelement.h>
+#include <lasem/lsmsvgradialgradientelement.h>
+#include <lasem/lsmsvgrectelement.h>
+#include <lasem/lsmsvgstopelement.h>
+#include <lasem/lsmsvgstyle.h>
+#include <lasem/lsmsvgsvgelement.h>
+#include <lasem/lsmsvgsymbolelement.h>
+#include <lasem/lsmsvgtextelement.h>
+#include <lasem/lsmsvgtraits.h>
+#include <lasem/lsmsvguseelement.h>
+#include <lasem/lsmsvgview.h>
+#include <lasem/lsmtraits.h>
+%%
+modulename lasem
+%%
+import gobject.GObject as PyGObject_Type
+%%
+ignore-glob
+  *_get_type
+%%
+override lsm_dom_view_get_size noargs
+static PyObject *
+_wrap_lsm_dom_view_get_size(PyGObject *self)
+{
+    PyObject *list;
+    double width, height;
+
+    lsm_dom_view_get_size(LSM_DOM_VIEW(self->obj), &width, &height);
+
+    list = PyTuple_New(2);
+    if (list == NULL) {
+        return NULL;
+    }
+
+    PyTuple_SetItem(list, 0, PyFloat_FromDouble(width));
+    PyTuple_SetItem(list, 1, PyFloat_FromDouble(height));
+
+    return list;
+}
+%%
+override lsm_dom_view_get_size_pixels noargs
+static PyObject *
+_wrap_lsm_dom_view_get_size_pixels(PyGObject *self)
+{
+    PyObject *list;
+    int width, height;
+
+    lsm_dom_view_get_size_pixels(LSM_DOM_VIEW(self->obj), &width, &height);
+
+    list = PyTuple_New(2);
+    if (list == NULL) {
+        return NULL;
+    }
+
+    PyTuple_SetItem(list, 0, PyInt_FromLong(width));
+    PyTuple_SetItem(list, 1, PyInt_FromLong(height));
+
+    return list;
+}
+%%

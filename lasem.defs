@@ -1,0 +1,482 @@
+;; -*- scheme -*-
+; object definitions ...
+(define-object DomNode
+  (in-module "Lsm")
+  (parent "GObject")
+  (c-name "LsmDomNode")
+  (gtype-id "LSM_TYPE_DOM_NODE")
+)
+
+(define-object DomElement
+  (in-module "Lsm")
+  (parent "LsmDomNode")
+  (c-name "LsmDomElement")
+  (gtype-id "LSM_TYPE_DOM_ELEMENT")
+)
+
+(define-object DomDocument
+  (in-module "Lsm")
+  (parent "LsmDomNode")
+  (c-name "LsmDomDocument")
+  (gtype-id "LSM_TYPE_DOM_DOCUMENT")
+)
+
+(define-object DomView
+  (in-module "Lsm")
+  (parent "GObject")
+  (c-name "LsmDomView")
+  (gtype-id "LSM_TYPE_DOM_VIEW")
+)
+
+(define-object MathmlDocument
+  (in-module "Lsm")
+  (parent "LsmDomDocument")
+  (c-name "LsmMathmlDocument")
+  (gtype-id "LSM_TYPE_MATHML_DOCUMENT")
+)
+
+;; Enumerations and flags ...F
+
+;; From lsmdomnode.h
+
+(define-function lsm_dom_node_get_type
+  (c-name "lsm_dom_node_get_type")
+  (return-type "GType")
+)
+
+(define-method get_node_name
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_node_name")
+  (return-type "const-char*")
+)
+
+(define-method get_node_value
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_node_value")
+  (return-type "const-char*")
+)
+
+(define-method set_node_value
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_set_node_value")
+  (return-type "none")
+  (parameters
+    '("const-char*" "new_value")
+  )
+)
+
+(define-method get_parent_node
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_parent_node")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_child_nodes
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_child_nodes")
+  (return-type "LsmDomNodeList*")
+)
+
+(define-method get_first_child
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_first_child")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_last_child
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_last_child")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_previous_sibling
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_previous_sibling")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_next_sibling
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_next_sibling")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_attributes
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_attributes")
+  (return-type "LsmDomNamedNodeMap*")
+)
+
+(define-method insert_before
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_insert_before")
+  (return-type "LsmDomNode*")
+  (parameters
+    '("LsmDomNode*" "new_child")
+    '("LsmDomNode*" "ref_child")
+  )
+)
+
+(define-method replace_child
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_replace_child")
+  (return-type "LsmDomNode*")
+  (parameters
+    '("LsmDomNode*" "new_child")
+    '("LsmDomNode*" "old_child")
+  )
+)
+
+(define-method append_child
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_append_child")
+  (return-type "LsmDomNode*")
+  (parameters
+    '("LsmDomNode*" "new_child")
+  )
+)
+
+(define-method remove_child
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_remove_child")
+  (return-type "LsmDomNode*")
+  (parameters
+    '("LsmDomNode*" "old_child")
+  )
+)
+
+(define-method has_child_nodes
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_has_child_nodes")
+  (return-type "gboolean")
+)
+
+(define-method changed
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_changed")
+  (return-type "none")
+)
+
+(define-method get_owner_document
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_owner_document")
+  (return-type "LsmDomDocument*")
+)
+
+(define-method dump
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_dump")
+  (return-type "none")
+)
+
+
+
+;; From lsmdomdocument.h
+
+(define-function lsm_dom_document_get_type
+  (c-name "lsm_dom_document_get_type")
+  (return-type "GType")
+)
+
+(define-method get_document_element
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_document_element")
+  (return-type "LsmDomElement*")
+)
+
+(define-method create_element
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_create_element")
+  (return-type "LsmDomElement*")
+  (parameters
+    '("const-char*" "tag_name")
+  )
+)
+
+(define-method create_text_node
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_create_text_node")
+  (return-type "LsmDomText*")
+  (parameters
+    '("const-char*" "data")
+  )
+)
+
+(define-method get_element_by_id
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_element_by_id")
+  (return-type "LsmDomElement*")
+  (parameters
+    '("const-char*" "id")
+  )
+)
+
+(define-method register_element
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_register_element")
+  (return-type "none")
+  (parameters
+    '("LsmDomElement*" "element")
+    '("const-char*" "id")
+  )
+)
+
+(define-method create_view
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_create_view")
+  (return-type "LsmDomView*")
+)
+
+(define-method get_resolution
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_resolution")
+  (return-type "double")
+)
+
+(define-method set_resolution
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_set_resolution")
+  (return-type "none")
+  (parameters
+    '("double" "ppi")
+  )
+)
+
+(define-method set_viewport
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_set_viewport")
+  (return-type "none")
+  (parameters
+    '("const-LsmBox*" "viewport")
+  )
+)
+
+(define-method set_viewport_px
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_set_viewport_px")
+  (return-type "none")
+  (parameters
+    '("const-LsmBox*" "viewport")
+  )
+)
+
+(define-method get_viewport
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_viewport")
+  (return-type "LsmBox")
+)
+
+(define-method get_viewport_px
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_viewport_px")
+  (return-type "LsmBox")
+)
+
+(define-method get_url
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_url")
+  (return-type "const-char*")
+)
+
+(define-method set_url
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_set_url")
+  (return-type "none")
+  (parameters
+    '("const-char*" "url")
+  )
+)
+
+(define-method set_path
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_set_path")
+  (return-type "none")
+  (parameters
+    '("const-char*" "path")
+  )
+)
+
+(define-method get_href_data
+  (of-object "LsmDomDocument")
+  (c-name "lsm_dom_document_get_href_data")
+  (return-type "void*")
+  (parameters
+    '("const-char*" "href")
+    '("gsize*" "size")
+  )
+)
+
+
+
+;; From lsmdomelement.h
+
+(define-function lsm_dom_element_get_type
+  (c-name "lsm_dom_element_get_type")
+  (return-type "GType")
+)
+
+(define-method get_attribute
+  (of-object "LsmDomElement")
+  (c-name "lsm_dom_element_get_attribute")
+  (return-type "const-char*")
+  (parameters
+    '("const-char*" "name")
+  )
+)
+
+(define-method set_attribute
+  (of-object "LsmDomElement")
+  (c-name "lsm_dom_element_set_attribute")
+  (return-type "none")
+  (parameters
+    '("const-char*" "name")
+    '("const-char*" "attribute_value")
+  )
+)
+
+
+
+;; From lsmdomview.h
+
+(define-function lsm_dom_view_get_type
+  (c-name "lsm_dom_view_get_type")
+  (return-type "GType")
+)
+
+(define-method render
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_render")
+  (return-type "none")
+  (parameters
+    '("double" "x")
+    '("double" "y")
+  )
+)
+
+(define-method get_size
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_get_size")
+  (return-type "none")
+  (parameters
+    '("double*" "width")
+    '("double*" "height")
+  )
+)
+
+(define-method get_size_pixels
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_get_size_pixels")
+  (return-type "none")
+  (parameters
+    '("unsigned-int*" "width")
+    '("unsigned-int*" "height")
+  )
+)
+
+(define-method set_document
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_set_document")
+  (return-type "none")
+  (parameters
+    '("LsmDomDocument*" "document")
+  )
+)
+
+(define-method set_cairo
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_set_cairo")
+  (return-type "none")
+  (parameters
+    '("cairo_t*" "cr")
+  )
+)
+
+(define-method set_debug
+  (of-object "LsmDomView")
+  (c-name "lsm_dom_view_set_debug")
+  (return-type "none")
+  (parameters
+    '("gboolean" "debug")
+  )
+)
+
+
+
+;; From lsmdomparser.h
+
+(define-function lsm_dom_document_new_from_memory
+  (c-name "lsm_dom_document_new_from_memory")
+  (return-type "LsmDomDocument*")
+  (parameters
+    '("const-char*" "buffer")
+    '("int" "size")
+    '("GError**" "error")
+  )
+)
+
+(define-function lsm_dom_document_new_from_path
+  (c-name "lsm_dom_document_new_from_path")
+  (return-type "LsmDomDocument*")
+  (parameters
+    '("const-char*" "path")
+    '("GError*" "error")
+  )
+)
+
+(define-function lsm_dom_document_new_from_url
+  (c-name "lsm_dom_document_new_from_url")
+  (return-type "LsmDomDocument*")
+  (parameters
+    '("const-char*" "url")
+    '("GError*" "error")
+  )
+)
+
+
+
+;; From lsmmathmldocument.h
+
+(define-function lsm_mathml_document_get_type
+  (c-name "lsm_mathml_document_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_document_new
+  (c-name "lsm_mathml_document_new")
+  (is-constructor-of "LsmMathmlDocument")
+  (return-type "LsmMathmlDocument*")
+)
+
+(define-method get_root_element
+  (of-object "LsmMathmlDocument")
+  (c-name "lsm_mathml_document_get_root_element")
+  (return-type "LsmMathmlMathElement*")
+)
+
+(define-function lsm_mathml_document_new_from_itex
+  (c-name "lsm_mathml_document_new_from_itex")
+  (return-type "LsmMathmlDocument*")
+  (parameters
+    '("const-char*" "itex")
+    '("int" "size")
+    '("GError**" "error")
+  )
+)
+
+(define-function lsm_mathml_document_new_from_itex_path
+  (c-name "lsm_mathml_document_new_from_itex_path")
+  (return-type "LsmMathmlDocument*")
+  (parameters
+    '("const-char*" "url")
+    '("GError**" "error")
+  )
+)
+
+(define-function lsm_mathml_document_new_from_itex_url
+  (c-name "lsm_mathml_document_new_from_itex_url")
+  (return-type "LsmMathmlDocument*")
+  (parameters
+    '("const-char*" "url")
+    '("GError**" "error")
+  )
+)
