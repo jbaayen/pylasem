@@ -1,4 +1,5 @@
 ;; -*- scheme -*-
+(include "lasem-types.defs")
 ; object definitions ...
 (define-object DomNode
   (in-module "Lsm")
@@ -49,19 +50,351 @@
   (gtype-id "LSM_TYPE_MATHML_MATH_ELEMENT")
 )
 
-(define-boxed MathmlStyle
+;; Enumerations and flags ...
+
+(define-enum MathmlMode
   (in-module "Lsm")
-  (c-name "LsmMathmlStyle")
-  (gtype-id "LSM_TYPE_MATHML_STYLE")
-  (copy-func "lsm_mathml_style_duplicate")
-  (release-func "lsm_mathml_style_free")
-  (fields
-    '("gdouble" "math_size_value")
+  (c-name "LsmMathmlMode")
+  (gtype-id "LSM_TYPE_MATHML_MODE")
+  (values
+    '("display" "LSM_MATHML_MODE_DISPLAY")
+    '("inline" "LSM_MATHML_MODE_INLINE")
   )
 )
 
-;; Enumerations and flags ...
+(define-enum MathmlDisplay
+  (in-module "Lsm")
+  (c-name "LsmMathmlDisplay")
+  (gtype-id "LSM_TYPE_MATHML_DISPLAY")
+  (values
+    '("block" "LSM_MATHML_DISPLAY_BLOCK")
+    '("inline" "LSM_MATHML_DISPLAY_INLINE")
+  )
+)
 
+(define-enum MathmlSpaceName
+  (in-module "Lsm")
+  (c-name "LsmMathmlSpaceName")
+  (gtype-id "LSM_TYPE_MATHML_SPACE_NAME")
+  (values
+    '("error" "LSM_MATHML_SPACE_NAME_ERROR")
+    '("very-very-thin" "LSM_MATHML_SPACE_NAME_VERY_VERY_THIN")
+    '("very-thin" "LSM_MATHML_SPACE_NAME_VERY_THIN")
+    '("thin" "LSM_MATHML_SPACE_NAME_THIN")
+    '("medium" "LSM_MATHML_SPACE_NAME_MEDIUM")
+    '("thick" "LSM_MATHML_SPACE_NAME_THICK")
+    '("very-thick" "LSM_MATHML_SPACE_NAME_VERY_THICK")
+    '("very-very-thick" "LSM_MATHML_SPACE_NAME_VERY_VERY_THICK")
+    '("infinity" "LSM_MATHML_SPACE_NAME_INFINITY")
+  )
+)
+
+(define-enum MathmlUnit
+  (in-module "Lsm")
+  (c-name "LsmMathmlUnit")
+  (gtype-id "LSM_TYPE_MATHML_UNIT")
+  (values
+    '("none" "LSM_MATHML_UNIT_NONE")
+    '("em" "LSM_MATHML_UNIT_EM")
+    '("ex" "LSM_MATHML_UNIT_EX")
+    '("in" "LSM_MATHML_UNIT_IN")
+    '("cm" "LSM_MATHML_UNIT_CM")
+    '("mm" "LSM_MATHML_UNIT_MM")
+    '("pt" "LSM_MATHML_UNIT_PT")
+    '("px" "LSM_MATHML_UNIT_PX")
+    '("pc" "LSM_MATHML_UNIT_PC")
+    '("percent" "LSM_MATHML_UNIT_PERCENT")
+  )
+)
+
+(define-enum MathmlFontStyle
+  (in-module "Lsm")
+  (c-name "LsmMathmlFontStyle")
+  (gtype-id "LSM_TYPE_MATHML_FONT_STYLE")
+  (values
+    '("normal" "LSM_MATHML_FONT_STYLE_NORMAL")
+    '("italic" "LSM_MATHML_FONT_STYLE_ITALIC")
+    '("error" "LSM_MATHML_FONT_STYLE_ERROR")
+  )
+)
+
+(define-enum MathmlFontWeight
+  (in-module "Lsm")
+  (c-name "LsmMathmlFontWeight")
+  (gtype-id "LSM_TYPE_MATHML_FONT_WEIGHT")
+  (values
+    '("normal" "LSM_MATHML_FONT_WEIGHT_NORMAL")
+    '("bold" "LSM_MATHML_FONT_WEIGHT_BOLD")
+    '("error" "LSM_MATHML_FONT_WEIGHT_ERROR")
+  )
+)
+
+(define-enum MathmlVariant
+  (in-module "Lsm")
+  (c-name "LsmMathmlVariant")
+  (gtype-id "LSM_TYPE_MATHML_VARIANT")
+  (values
+    '("normal" "LSM_MATHML_VARIANT_NORMAL")
+    '("bold" "LSM_MATHML_VARIANT_BOLD")
+    '("italic" "LSM_MATHML_VARIANT_ITALIC")
+    '("bold-italic" "LSM_MATHML_VARIANT_BOLD_ITALIC")
+    '("double-struck" "LSM_MATHML_VARIANT_DOUBLE_STRUCK")
+    '("fraktur-bold" "LSM_MATHML_VARIANT_FRAKTUR_BOLD")
+    '("script" "LSM_MATHML_VARIANT_SCRIPT")
+    '("script-bold" "LSM_MATHML_VARIANT_SCRIPT_BOLD")
+    '("fraktur" "LSM_MATHML_VARIANT_FRAKTUR")
+    '("sans-serif" "LSM_MATHML_VARIANT_SANS_SERIF")
+    '("sans-serif-bold" "LSM_MATHML_VARIANT_SANS_SERIF_BOLD")
+    '("sans-serif-italic" "LSM_MATHML_VARIANT_SANS_SERIF_ITALIC")
+    '("sans-serif-bold-italic" "LSM_MATHML_VARIANT_SANS_SERIF_BOLD_ITALIC")
+    '("monospace" "LSM_MATHML_VARIANT_MONOSPACE")
+    '("error" "LSM_MATHML_VARIANT_ERROR")
+  )
+)
+
+(define-enum MathmlForm
+  (in-module "Lsm")
+  (c-name "LsmMathmlForm")
+  (gtype-id "LSM_TYPE_MATHML_FORM")
+  (values
+    '("prefix" "LSM_MATHML_FORM_PREFIX")
+    '("postfix" "LSM_MATHML_FORM_POSTFIX")
+    '("infix" "LSM_MATHML_FORM_INFIX")
+    '("error" "LSM_MATHML_FORM_ERROR")
+  )
+)
+
+(define-enum MathmlRowAlign
+  (in-module "Lsm")
+  (c-name "LsmMathmlRowAlign")
+  (gtype-id "LSM_TYPE_MATHML_ROW_ALIGN")
+  (values
+    '("baseline" "LSM_MATHML_ROW_ALIGN_BASELINE")
+    '("top" "LSM_MATHML_ROW_ALIGN_TOP")
+    '("bottom" "LSM_MATHML_ROW_ALIGN_BOTTOM")
+    '("center" "LSM_MATHML_ROW_ALIGN_CENTER")
+    '("axis" "LSM_MATHML_ROW_ALIGN_AXIS")
+    '("error" "LSM_MATHML_ROW_ALIGN_ERROR")
+  )
+)
+
+(define-enum MathmlColumnAlign
+  (in-module "Lsm")
+  (c-name "LsmMathmlColumnAlign")
+  (gtype-id "LSM_TYPE_MATHML_COLUMN_ALIGN")
+  (values
+    '("center" "LSM_MATHML_COLUMN_ALIGN_CENTER")
+    '("left" "LSM_MATHML_COLUMN_ALIGN_LEFT")
+    '("right" "LSM_MATHML_COLUMN_ALIGN_RIGHT")
+  )
+)
+
+(define-enum MathmlLine
+  (in-module "Lsm")
+  (c-name "LsmMathmlLine")
+  (gtype-id "LSM_TYPE_MATHML_LINE")
+  (values
+    '("none" "LSM_MATHML_LINE_NONE")
+    '("solid" "LSM_MATHML_LINE_SOLID")
+    '("dashed" "LSM_MATHML_LINE_DASHED")
+  )
+)
+
+(define-enum DomNodeType
+  (in-module "Lsm")
+  (c-name "LsmDomNodeType")
+  (gtype-id "LSM_TYPE_DOM_NODE_TYPE")
+  (values
+    '("element-node" "LSM_DOM_NODE_TYPE_ELEMENT_NODE")
+    '("attribute-node" "LSM_DOM_NODE_TYPE_ATTRIBUTE_NODE")
+    '("text-node" "LSM_DOM_NODE_TYPE_TEXT_NODE")
+    '("cdata-section-node" "LSM_DOM_NODE_TYPE_CDATA_SECTION_NODE")
+    '("entity-reference-node" "LSM_DOM_NODE_TYPE_ENTITY_REFERENCE_NODE")
+    '("entity-node" "LSM_DOM_NODE_TYPE_ENTITY_NODE")
+    '("processing-instruction-node" "LSM_DOM_NODE_TYPE_PROCESSING_INSTRUCTION_NODE")
+    '("comment-node" "LSM_DOM_NODE_TYPE_COMMENT_NODE")
+    '("document-node" "LSM_DOM_NODE_TYPE_DOCUMENT_NODE")
+    '("document-type-node" "LSM_DOM_NODE_TYPE_DOCUMENT_TYPE_NODE")
+    '("document-fragment-node" "LSM_DOM_NODE_TYPE_DOCUMENT_FRAGMENT_NODE")
+    '("notation-node" "LSM_DOM_NODE_TYPE_NOTATION_NODE")
+  )
+)
+
+(define-enum DomDocumentError
+  (in-module "Lsm")
+  (c-name "LsmDomDocumentError")
+  (gtype-id "LSM_TYPE_DOM_DOCUMENT_ERROR")
+  (values
+    '("xml" "LSM_DOM_DOCUMENT_ERROR_INVALID_XML")
+  )
+)
+
+
+;; From lsmmathmlenums.h
+
+(define-method to_string
+  (of-object "LsmMathmlMode")
+  (c-name "lsm_mathml_mode_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_mode_from_string
+  (c-name "lsm_mathml_mode_from_string")
+  (return-type "LsmMathmlMode")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlDisplay")
+  (c-name "lsm_mathml_display_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_display_from_string
+  (c-name "lsm_mathml_display_from_string")
+  (return-type "LsmMathmlDisplay")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlSpaceName")
+  (c-name "lsm_mathml_space_name_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_space_name_from_string
+  (c-name "lsm_mathml_space_name_from_string")
+  (return-type "LsmMathmlSpaceName")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlUnit")
+  (c-name "lsm_mathml_unit_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_unit_from_string
+  (c-name "lsm_mathml_unit_from_string")
+  (return-type "LsmMathmlUnit")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-function lsm_mathml_font_style_from_string
+  (c-name "lsm_mathml_font_style_from_string")
+  (return-type "LsmMathmlFontStyle")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-function lsm_mathml_font_weight_from_string
+  (c-name "lsm_mathml_font_weight_from_string")
+  (return-type "LsmMathmlFontWeight")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlVariant")
+  (c-name "lsm_mathml_variant_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_variant_from_string
+  (c-name "lsm_mathml_variant_from_string")
+  (return-type "LsmMathmlVariant")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method set_font_style
+  (of-object "LsmMathmlVariant")
+  (c-name "lsm_mathml_variant_set_font_style")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlFontStyle" "style")
+  )
+)
+
+(define-method set_font_weight
+  (of-object "LsmMathmlVariant")
+  (c-name "lsm_mathml_variant_set_font_weight")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlFontWeight" "weight")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlForm")
+  (c-name "lsm_mathml_form_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_form_from_string
+  (c-name "lsm_mathml_form_from_string")
+  (return-type "LsmMathmlForm")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlRowAlign")
+  (c-name "lsm_mathml_row_align_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_row_align_from_string
+  (c-name "lsm_mathml_row_align_from_string")
+  (return-type "LsmMathmlRowAlign")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlColumnAlign")
+  (c-name "lsm_mathml_column_align_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_column_align_from_string
+  (c-name "lsm_mathml_column_align_from_string")
+  (return-type "LsmMathmlColumnAlign")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+(define-method to_string
+  (of-object "LsmMathmlLine")
+  (c-name "lsm_mathml_line_to_string")
+  (return-type "const-char*")
+)
+
+(define-function lsm_mathml_line_from_string
+  (c-name "lsm_mathml_line_from_string")
+  (return-type "LsmMathmlLine")
+  (parameters
+    '("const-char*" "string")
+  )
+)
+
+
+
+;; From lsmmathml.h
 
 
 
@@ -93,7 +426,11 @@
   )
 )
 
-
+(define-method get_node_type
+  (of-object "LsmDomNode")
+  (c-name "lsm_dom_node_get_node_type")
+  (return-type "LsmDomNodeType")
+)
 
 (define-method get_parent_node
   (of-object "LsmDomNode")
@@ -361,6 +698,209 @@
   (parameters
     '("const-char*" "name")
     '("const-char*" "attribute_value")
+  )
+)
+
+
+
+;; From lsmmathmlattributes.h
+
+(define-function lsm_mathml_color_get_type
+  (c-name "lsm_mathml_color_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_length_get_type
+  (c-name "lsm_mathml_length_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_space_get_type
+  (c-name "lsm_mathml_space_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_space_list_get_type
+  (c-name "lsm_mathml_space_list_get_type")
+  (return-type "GType")
+)
+
+(define-method compute
+  (of-object "LsmMathmlLength")
+  (c-name "lsm_mathml_length_compute")
+  (return-type "double")
+  (parameters
+    '("double" "default_value")
+    '("double" "font_size")
+  )
+)
+
+(define-method parse
+  (of-object "LsmMathmlScriptLevelAttribute")
+  (c-name "lsm_mathml_script_level_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("int*" "default_value")
+  )
+)
+
+(define-function lsm_mathml_mode_attribute_parse
+  (c-name "lsm_mathml_mode_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_display_attribute_parse
+  (c-name "lsm_mathml_display_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_form_attribute_parse
+  (c-name "lsm_mathml_form_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_font_style_attribute_parse
+  (c-name "lsm_mathml_font_style_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_font_weight_attribute_parse
+  (c-name "lsm_mathml_font_weight_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_variant_attribute_parse
+  (c-name "lsm_mathml_variant_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_line_attribute_parse
+  (c-name "lsm_mathml_line_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumAttribute*" "attribute")
+    '("unsigned-int*" "style_value")
+  )
+)
+
+(define-method parse
+  (of-object "LsmMathmlColorAttribute")
+  (c-name "lsm_mathml_color_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlColor*" "default_color")
+  )
+)
+
+(define-method parse
+  (of-object "LsmMathmlLengthAttribute")
+  (c-name "lsm_mathml_length_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlLength*" "style_value")
+    '("double" "font_size")
+  )
+)
+
+(define-method parse
+  (of-object "LsmMathmlSpaceAttribute")
+  (c-name "lsm_mathml_space_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlSpace*" "style_value")
+    '("LsmMathmlStyle*" "style")
+  )
+)
+
+(define-function lsm_mathml_space_list_new
+  (c-name "lsm_mathml_space_list_new")
+  (is-constructor-of "LsmMathmlSpaceList")
+  (return-type "LsmMathmlSpaceList*")
+  (parameters
+    '("unsigned-int" "n_spaces")
+  )
+)
+
+(define-method free
+  (of-object "LsmMathmlSpaceList")
+  (c-name "lsm_mathml_space_list_free")
+  (return-type "none")
+)
+
+(define-method duplicate
+  (of-object "LsmMathmlSpaceList")
+  (c-name "lsm_mathml_space_list_duplicate")
+  (return-type "LsmMathmlSpaceList*")
+)
+
+(define-method parse
+  (of-object "LsmMathmlSpaceListAttribute")
+  (c-name "lsm_mathml_space_list_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlSpaceList*" "style_value")
+    '("const-LsmMathmlStyle*" "style")
+  )
+)
+
+(define-function lsm_mathml_row_align_list_attribute_parse
+  (c-name "lsm_mathml_row_align_list_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumListAttribute*" "attribute")
+    '("LsmDomEnumList*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_column_align_list_attribute_parse
+  (c-name "lsm_mathml_column_align_list_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumListAttribute*" "attribute")
+    '("LsmDomEnumList*" "style_value")
+  )
+)
+
+(define-function lsm_mathml_line_list_attribute_parse
+  (c-name "lsm_mathml_line_list_attribute_parse")
+  (return-type "none")
+  (parameters
+    '("LsmDomEnumListAttribute*" "attribute")
+    '("LsmDomEnumList*" "style_value")
+  )
+)
+
+(define-method add_space_list
+  (of-object "LsmDomAttributeMap")
+  (c-name "lsm_dom_attribute_map_add_space_list")
+  (return-type "none")
+  (parameters
+    '("char-const*" "name")
+    '("ptrdiff_t" "offset")
   )
 )
 
@@ -652,6 +1192,8 @@
     '("double" "alpha")
   )
 )
+
+
 
 ;; From lsmmathmlmathelement.h
 

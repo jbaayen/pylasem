@@ -6,6 +6,7 @@ headers
 extern Pycairo_CAPI_t *Pycairo_CAPI;
 extern PyTypeObject PyGdkCairoContext_Type;\
 //extern PyTypeObject PyGObject_Type;
+#include <lasem/lsmenumtypes.h>
 #include <lasem/lsmattributes.h>
 #include <lasem/lsmdebug.h>
 #include <lasem/lsmdomnode.h>

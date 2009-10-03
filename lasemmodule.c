@@ -18,8 +18,6 @@ initlasem(void)
     m = Py_InitModule ("lasem", lasem_functions);
     d = PyModule_GetDict (m);
 
-
-
     lasem_register_classes (d);
 
     if (PyErr_Occurred ()) {
