@@ -35,7 +35,35 @@
   (gtype-id "LSM_TYPE_MATHML_DOCUMENT")
 )
 
-;; Enumerations and flags ...F
+(define-object MathmlElement
+  (in-module "Lsm")
+  (parent "LsmDomElement")
+  (c-name "LsmMathmlElement")
+  (gtype-id "LSM_TYPE_MATHML_ELEMENT")
+)
+
+(define-object MathmlMathElement
+  (in-module "Lsm")
+  (parent "LsmMathmlElement")
+  (c-name "LsmMathmlMathElement")
+  (gtype-id "LSM_TYPE_MATHML_MATH_ELEMENT")
+)
+
+(define-boxed MathmlStyle
+  (in-module "Lsm")
+  (c-name "LsmMathmlStyle")
+  (gtype-id "LSM_TYPE_MATHML_STYLE")
+  (copy-func "lsm_mathml_style_duplicate")
+  (release-func "lsm_mathml_style_free")
+  (fields
+    '("gdouble" "math_size_value")
+  )
+)
+
+;; Enumerations and flags ...
+
+
+
 
 ;; From lsmdomnode.h
 
@@ -64,6 +92,8 @@
     '("const-char*" "new_value")
   )
 )
+
+
 
 (define-method get_parent_node
   (of-object "LsmDomNode")
@@ -478,5 +508,209 @@
   (parameters
     '("const-char*" "url")
     '("GError**" "error")
+  )
+)
+
+
+
+;; From lsmmathmlelement.h
+
+(define-function lsm_mathml_element_get_type
+  (c-name "lsm_mathml_element_get_type")
+  (return-type "GType")
+)
+
+(define-method update
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_update")
+  (return-type "gboolean")
+  (parameters
+    '("const-LsmMathmlStyle*" "style")
+  )
+)
+
+(define-method measure
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_measure")
+  (return-type "const-LsmMathmlBbox*")
+  (parameters
+    '("LsmMathmlView*" "view")
+    '("const-LsmMathmlBbox*" "stretch_bbox")
+  )
+)
+
+(define-method layout
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_layout")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlView*" "view")
+    '("double" "x")
+    '("double" "y")
+    '("const-LsmMathmlBbox*" "bbox")
+  )
+)
+
+(define-method render
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_render")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlView*" "view")
+  )
+)
+
+(define-method get_embellished_core
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_get_embellished_core")
+  (return-type "LsmMathmlOperatorElement*")
+)
+
+(define-method get_bbox
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_get_bbox")
+  (return-type "const-LsmMathmlBbox*")
+)
+
+(define-method is_inferred_row
+  (of-object "LsmMathmlElement")
+  (c-name "lsm_mathml_element_is_inferred_row")
+  (return-type "gboolean")
+)
+
+
+
+;; From lsmmathmlstyle.h
+
+(define-function lsm_mathml_style_get_type
+  (c-name "lsm_mathml_style_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_style_new
+  (c-name "lsm_mathml_style_new")
+  (is-constructor-of "LsmMathmlStyle")
+  (return-type "LsmMathmlStyle*")
+)
+
+(define-method free
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_free")
+  (return-type "none")
+)
+
+(define-method duplicate
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_duplicate")
+  (return-type "LsmMathmlStyle*")
+)
+
+(define-method change_script_level
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_change_script_level")
+  (return-type "none")
+  (parameters
+    '("int" "increment")
+  )
+)
+
+(define-method set_math_size_pt
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_set_math_size_pt")
+  (return-type "none")
+  (parameters
+    '("double" "math_size")
+  )
+)
+
+(define-method set_math_family
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_set_math_family")
+  (return-type "none")
+  (parameters
+    '("const-char*" "math_family")
+  )
+)
+
+(define-method set_math_variant
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_set_math_variant")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlVariant" "math_variant")
+  )
+)
+
+(define-method set_math_color
+  (of-object "LsmMathmlStyle")
+  (c-name "lsm_mathml_style_set_math_color")
+  (return-type "none")
+  (parameters
+    '("double" "red")
+    '("double" "green")
+    '("double" "blue")
+    '("double" "alpha")
+  )
+)
+
+;; From lsmmathmlmathelement.h
+
+(define-function lsm_mathml_math_element_get_type
+  (c-name "lsm_mathml_math_element_get_type")
+  (return-type "GType")
+)
+
+(define-function lsm_mathml_math_element_new
+  (c-name "lsm_mathml_math_element_new")
+  (is-constructor-of "LsmMathmlMathElement")
+  (return-type "LsmDomNode*")
+)
+
+(define-method get_default_style
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_get_default_style")
+  (return-type "LsmMathmlStyle*")
+)
+
+(define-method set_default_style
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_set_default_style")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlStyle*" "style")
+  )
+)
+
+(define-method update
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_update")
+  (return-type "none")
+)
+
+(define-method measure
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_measure")
+  (return-type "const-LsmMathmlBbox*")
+  (parameters
+    '("LsmMathmlView*" "view")
+  )
+)
+
+(define-method layout
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_layout")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlView*" "view")
+    '("const-LsmMathmlBbox*" "bbox")
+  )
+)
+
+(define-method render
+  (of-object "LsmMathmlMathElement")
+  (c-name "lsm_mathml_math_element_render")
+  (return-type "none")
+  (parameters
+    '("LsmMathmlView*" "view")
   )
 )
