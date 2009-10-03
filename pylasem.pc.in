@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+
+Name: PyLasem
+Description: Python bindings for Lasem
+Version: @VERSION@
+Requires: pygobject-2.0 pycairo
