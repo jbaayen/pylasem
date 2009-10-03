@@ -1,5 +1,4 @@
 ;; -*- scheme -*-
-(include "lasem-types.defs")
 ; object definitions ...
 (define-object DomNode
   (in-module "Lsm")
@@ -48,6 +47,88 @@
   (parent "LsmMathmlElement")
   (c-name "LsmMathmlMathElement")
   (gtype-id "LSM_TYPE_MATHML_MATH_ELEMENT")
+)
+
+(define-boxed MathmlStyle
+  (in-module "Lsm")
+  (c-name "LsmMathmlStyle")
+  (gtype-id "LSM_TYPE_MATHML_STYLE")
+  (copy-func "lsm_mathml_style_duplicate")
+  (release-func "lsm_mathml_style_free")
+  (fields
+    '("gdouble" "math_size_value")
+    '("LsmMathmlDisplay" "display")
+	'("gint" "script_level")
+	'("gdouble" "script_size_multiplier")
+	'("LsmMathmlLength" "script_min_size")
+	'("LsmMathmlLength" "very_very_thin_math_space")
+	'("LsmMathmlLength" "very_thin_math_space")
+	'("LsmMathmlLength" "thin_math_space")
+	'("LsmMathmlLength" "medium_math_space")
+	'("LsmMathmlLength" "thick_math_space")
+	'("LsmMathmlLength" "very_thick_math_space")
+	'("LsmMathmlLength" "very_very_thick_math_space")
+	'("gdouble" "very_very_thin_math_space_value")
+	'("gdouble" "very_thin_math_space_value")
+	'("gdouble" "thin_math_space_value")
+	'("gdouble" "medium_math_space_value")
+	'("gdouble" "thick_math_space_value")
+	'("gdouble" "very_thick_math_space_value")
+	'("gdouble" "very_very_thick_math_space_value")
+	'("gchar*" "math_family")
+	'("LsmMathmlVariant" "math_variant")
+	'("LsmMathmlLength" "math_size")
+	'("LsmMathmlColor" "math_color")
+	'("LsmMathmlColor" "math_background")
+	'("gboolean" "bevelled")
+	'("LsmMathmlLength" "subscript_shift")
+	'("LsmMathmlLength" "superscript_shift")
+	'("LsmMathmlLength" "line_thickness")
+  )
+)
+
+(define-boxed MathmlColor
+  (in-module "Lsm")
+  (c-name "LsmMathmlColor")
+  (gtype-id "LSM_TYPE_MATHML_COLOR")
+  (fields
+	'("gdouble" "red")
+    '("gdouble" "green")
+    '("gdouble" "blue")
+    '("gdouble" "alpha")
+  )
+)
+
+(define-boxed MathmlLength
+  (in-module "Lsm")
+  (c-name "LsmMathmlLength")
+  (gtype-id "LSM_TYPE_MATHML_LENGTH")
+  (fields
+	'("gdouble" "value")
+    '("LsmMathmlUnit" "unit")
+  )
+)
+
+(define-boxed MathmlSpace
+  (in-module "Lsm")
+  (c-name "LsmMathmlSpace")
+  (gtype-id "LSM_TYPE_MATHML_SPACE")
+  (fields
+	'("LsmMathmlSpaceName" "name")
+    '("LsmMathmlLength" "length")
+  )
+)
+
+(define-boxed MathmlSpaceList
+  (in-module "Lsm")
+  (c-name "LsmMathmlSpaceList")
+  (gtype-id "LSM_TYPE_MATHML_SPACE_LIST")
+  (copy-func "lsm_mathml_space_list_duplicate")
+  (release-func "lsm_mathml_space_list_free")
+  (fields
+	'("guint" "n_spaces")
+    '("LsmMathmlSpace*" "spaces")
+  )
 )
 
 ;; Enumerations and flags ...
@@ -238,7 +319,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_mode_from_string
+(define-function mathml_mode_from_string
   (c-name "lsm_mathml_mode_from_string")
   (return-type "LsmMathmlMode")
   (parameters
@@ -252,7 +333,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_display_from_string
+(define-function mathml_display_from_string
   (c-name "lsm_mathml_display_from_string")
   (return-type "LsmMathmlDisplay")
   (parameters
@@ -266,7 +347,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_space_name_from_string
+(define-function mathml_space_name_from_string
   (c-name "lsm_mathml_space_name_from_string")
   (return-type "LsmMathmlSpaceName")
   (parameters
@@ -280,7 +361,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_unit_from_string
+(define-function mathml_unit_from_string
   (c-name "lsm_mathml_unit_from_string")
   (return-type "LsmMathmlUnit")
   (parameters
@@ -288,7 +369,7 @@
   )
 )
 
-(define-function lsm_mathml_font_style_from_string
+(define-function mathml_font_style_from_string
   (c-name "lsm_mathml_font_style_from_string")
   (return-type "LsmMathmlFontStyle")
   (parameters
@@ -296,7 +377,7 @@
   )
 )
 
-(define-function lsm_mathml_font_weight_from_string
+(define-function mathml_font_weight_from_string
   (c-name "lsm_mathml_font_weight_from_string")
   (return-type "LsmMathmlFontWeight")
   (parameters
@@ -310,7 +391,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_variant_from_string
+(define-function mathml_variant_from_string
   (c-name "lsm_mathml_variant_from_string")
   (return-type "LsmMathmlVariant")
   (parameters
@@ -342,7 +423,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_form_from_string
+(define-function mathml_form_from_string
   (c-name "lsm_mathml_form_from_string")
   (return-type "LsmMathmlForm")
   (parameters
@@ -356,7 +437,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_row_align_from_string
+(define-function mathml_row_align_from_string
   (c-name "lsm_mathml_row_align_from_string")
   (return-type "LsmMathmlRowAlign")
   (parameters
@@ -370,7 +451,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_column_align_from_string
+(define-function mathml_column_align_from_string
   (c-name "lsm_mathml_column_align_from_string")
   (return-type "LsmMathmlColumnAlign")
   (parameters
@@ -384,7 +465,7 @@
   (return-type "const-char*")
 )
 
-(define-function lsm_mathml_line_from_string
+(define-function mathml_line_from_string
   (c-name "lsm_mathml_line_from_string")
   (return-type "LsmMathmlLine")
   (parameters
@@ -744,7 +825,7 @@
   )
 )
 
-(define-function lsm_mathml_mode_attribute_parse
+(define-function mathml_mode_attribute_parse
   (c-name "lsm_mathml_mode_attribute_parse")
   (return-type "none")
   (parameters
@@ -753,7 +834,7 @@
   )
 )
 
-(define-function lsm_mathml_display_attribute_parse
+(define-function mathml_display_attribute_parse
   (c-name "lsm_mathml_display_attribute_parse")
   (return-type "none")
   (parameters
@@ -762,7 +843,7 @@
   )
 )
 
-(define-function lsm_mathml_form_attribute_parse
+(define-function mathml_form_attribute_parse
   (c-name "lsm_mathml_form_attribute_parse")
   (return-type "none")
   (parameters
@@ -771,7 +852,7 @@
   )
 )
 
-(define-function lsm_mathml_font_style_attribute_parse
+(define-function mathml_font_style_attribute_parse
   (c-name "lsm_mathml_font_style_attribute_parse")
   (return-type "none")
   (parameters
@@ -780,7 +861,7 @@
   )
 )
 
-(define-function lsm_mathml_font_weight_attribute_parse
+(define-function mathml_font_weight_attribute_parse
   (c-name "lsm_mathml_font_weight_attribute_parse")
   (return-type "none")
   (parameters
@@ -789,7 +870,7 @@
   )
 )
 
-(define-function lsm_mathml_variant_attribute_parse
+(define-function mathml_variant_attribute_parse
   (c-name "lsm_mathml_variant_attribute_parse")
   (return-type "none")
   (parameters
@@ -798,7 +879,7 @@
   )
 )
 
-(define-function lsm_mathml_line_attribute_parse
+(define-function mathml_line_attribute_parse
   (c-name "lsm_mathml_line_attribute_parse")
   (return-type "none")
   (parameters
@@ -867,7 +948,7 @@
   )
 )
 
-(define-function lsm_mathml_row_align_list_attribute_parse
+(define-function mathml_row_align_list_attribute_parse
   (c-name "lsm_mathml_row_align_list_attribute_parse")
   (return-type "none")
   (parameters
@@ -876,7 +957,7 @@
   )
 )
 
-(define-function lsm_mathml_column_align_list_attribute_parse
+(define-function mathml_column_align_list_attribute_parse
   (c-name "lsm_mathml_column_align_list_attribute_parse")
   (return-type "none")
   (parameters
@@ -885,7 +966,7 @@
   )
 )
 
-(define-function lsm_mathml_line_list_attribute_parse
+(define-function mathml_line_list_attribute_parse
   (c-name "lsm_mathml_line_list_attribute_parse")
   (return-type "none")
   (parameters
@@ -974,7 +1055,7 @@
 
 ;; From lsmdomparser.h
 
-(define-function lsm_dom_document_new_from_memory
+(define-function dom_document_new_from_memory
   (c-name "lsm_dom_document_new_from_memory")
   (return-type "LsmDomDocument*")
   (parameters
@@ -984,7 +1065,7 @@
   )
 )
 
-(define-function lsm_dom_document_new_from_path
+(define-function dom_document_new_from_path
   (c-name "lsm_dom_document_new_from_path")
   (return-type "LsmDomDocument*")
   (parameters
@@ -993,7 +1074,7 @@
   )
 )
 
-(define-function lsm_dom_document_new_from_url
+(define-function dom_document_new_from_url
   (c-name "lsm_dom_document_new_from_url")
   (return-type "LsmDomDocument*")
   (parameters
@@ -1023,7 +1104,7 @@
   (return-type "LsmMathmlMathElement*")
 )
 
-(define-function lsm_mathml_document_new_from_itex
+(define-function mathml_document_new_from_itex
   (c-name "lsm_mathml_document_new_from_itex")
   (return-type "LsmMathmlDocument*")
   (parameters
@@ -1033,7 +1114,7 @@
   )
 )
 
-(define-function lsm_mathml_document_new_from_itex_path
+(define-function mathml_document_new_from_itex_path
   (c-name "lsm_mathml_document_new_from_itex_path")
   (return-type "LsmMathmlDocument*")
   (parameters
@@ -1042,7 +1123,7 @@
   )
 )
 
-(define-function lsm_mathml_document_new_from_itex_url
+(define-function mathml_document_new_from_itex_url
   (c-name "lsm_mathml_document_new_from_itex_url")
   (return-type "LsmMathmlDocument*")
   (parameters
