@@ -45,9 +45,13 @@ AC_MSG_CHECKING(for headers required to compile python extensions)
 dnl deduce PYTHON_INCLUDES
 py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
 py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
+if test -x "$PYTHON-config"; then
+PYTHON_INCLUDES=`$PYTHON-config --includes 2>/dev/null`
+else
 PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
 if test "$py_prefix" != "$py_exec_prefix"; then
   PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
+fi
 fi
 AC_SUBST(PYTHON_INCLUDES)
 dnl check if the headers exist:
@@ -59,60 +63,4 @@ $1],dnl
 [AC_MSG_RESULT(not found)
 $2])
 CPPFLAGS="$save_CPPFLAGS"
-
-	# This bit is copied from Planner. murrayc.
-	# Check for Python library path
-        AC_MSG_CHECKING([for Python library path])
-
-	# Win32 has libpython25.a instead of libpython2.5.a, so we look
-	# for both. TODO: Only look for libpython25.a on Windows, and for
-	# libpython2.5.a on unix.
-	WIN32_PYTHON_VERSION=`echo $PYTHON_VERSION | sed "s,\.,,"`
-
-        python_path=`dirname $PYTHON | sed "s,/bin.*$,,"`
-        for i in "$python_path/lib/python$PYTHON_VERSION/config/" "$python_path/lib/python$PYTHON_VERSION/" "$python_path/lib/python/config/" "$python_path/lib/python/" "$python_path/" ; do
-		if test -e "$i"; then
-	                python_path=`find $i -type f -name libpython$PYTHON_VERSION.* -print | sed "1q"`
-        	        if test -n "$python_path" ; then
-				python_lib="python$PYTHON_VERSION"
-                	        break
-	                fi
-
-			# Additionally test WIN32_PYTHON_VERSION
-	                python_path=`find $i -type f -name libpython$WIN32_PYTHON_VERSION.* -print | sed "1q"`
-        	        if test -n "$python_path" ; then
-				python_lib="python$WIN32_PYTHON_VERSION"
-                	        break
-	                fi
-		fi
-        done
-
-        python_path=`echo $python_path | sed "s,/libpython.*$,,"`
-        AC_MSG_RESULT([$python_path])
-        if test -z "$python_path" ; then
-                AC_MSG_ERROR([cannot find Python library path])
-        fi
-        AC_SUBST([PYTHON_LDFLAGS],["-L$python_path -l$python_lib"])
 ])
-
-dnl
-dnl JH_ADD_CFLAG(FLAG)
-dnl checks whether the C compiler supports the given flag, and if so, adds
-dnl it to $CFLAGS.  If the flag is already present in the list, then the
-dnl check is not performed.
-AC_DEFUN([JH_ADD_CFLAG],
-[
-case " $CFLAGS " in
-*@<:@\	\ @:>@$1@<:@\	\ @:>@*)
-  ;;
-*)
-  save_CFLAGS="$CFLAGS"
-  CFLAGS="$CFLAGS $1"
-  AC_MSG_CHECKING([whether [$]CC understands $1])
-  AC_TRY_COMPILE([], [], [jh_has_option=yes], [jh_has_option=no])
-  AC_MSG_RESULT($jh_has_option)
-  if test $jh_has_option = no; then
-    CFLAGS="$save_CFLAGS"
-  fi
-  ;;
-esac])
