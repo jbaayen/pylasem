@@ -29,8 +29,6 @@ AM_PATH_PYTHON(2.6)
 
 AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR(could not find Python headers)])
 
-PKG_CHECK_MODULES(PYGOBJECT, [pygobject-2.0 >= pygobject_required_version])
-
 PYGOBJECT_INCLUDEDIR=`$PKG_CONFIG --variable=pygtkincludedir pygobject-2.0`
 AC_SUBST(PYGOBJECT_INCLUDEDIR)
 
@@ -51,8 +49,9 @@ if test -n "$export_dynamic"; then
 fi
 PYGOBJECT_DATADIR=`pkg-config --variable=datadir pyobject-2.0`
 
-AC_SUBST(PYGOBJECT_CFLAGS)
-AC_SUBST(PYGOBJECT_LIBS)
+AC_SUBST(PYLASEM_CFLAGS)
+AC_SUBST(PYLASEM_LIBS)
+
 AC_SUBST(PYGOBJECT_DATADIR)
 
 dnl codegen
