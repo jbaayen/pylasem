@@ -9,7 +9,7 @@ m4_define(pylasem_version, pylasem_major_version.pylasem_minor_version.pylasem_m
 dnl versions of packages we require ...
 m4_define(pygobject_required_version, 2.10.1)
 m4_define(pycairo_required_version, 1.4.0)
-m4_define(lasem_required_version, 0.1.3)
+m4_define(lasem_required_version, 0.2.0)
 
 AC_INIT(pylasem, pylasem_version)
 
@@ -42,7 +42,7 @@ export_dynamic=`(./libtool --config; echo eval echo \\$export_dynamic_flag_spec)
 dnl requirements
 PKG_CHECK_MODULES(PYLASEM, [ dnl
                          pygobject-2.0 >= pygobject_required_version,
-                         lasem >= lasem_required_version,
+                         lasem-0.2 >= lasem_required_version,
                          pycairo >= pycairo_required_version
                          ])
 if test -n "$export_dynamic"; then
